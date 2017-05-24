@@ -130,9 +130,6 @@ public class MiniJRServer {
 			f.createNewFile();
 			ex.printStackTrace();
 		}
-
-		//
-
 	}
 
 	private static HashMap<String, Object> procesarParametros(
