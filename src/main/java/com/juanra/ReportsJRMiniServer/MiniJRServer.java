@@ -132,6 +132,12 @@ public class MiniJRServer {
 		}
 	}
 
+	/**
+	 * 
+	 * @param argumentoValor
+	 * @return
+	 * @throws Exception
+	 */
 	private static HashMap<String, Object> procesarParametros(
 			String argumentoValor) throws Exception {
 		HashMap<String, Object> params = new HashMap<String, Object>();
@@ -171,6 +177,12 @@ public class MiniJRServer {
 		return params;
 	}
 	
+	/**
+	 * 
+	 * @param argumentoValor
+	 * @param rutaPDF
+	 * @return
+	 */
 	private static HashMap<String, Object> procesarImagenes (
 			String argumentoValor, String rutaPDF) {
 		HashMap<String, Object> mapImagenes = new HashMap<String, Object>();
