@@ -8,6 +8,7 @@ import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Scanner;
 
@@ -18,6 +19,7 @@ import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.JasperReport;
 
 import com.juanra.ReportsJRMiniServer.model.Conexion;
+import com.juanra.ReportsJRMiniServer.model.Constants;
 
 /**
  * Aplicacion de generacion de informes a partir de ultimas
@@ -50,40 +52,40 @@ public class MiniJRServer {
 				//
 				String argumento = args[i];
 				Scanner sc = new Scanner(argumento);
-				sc.useDelimiter("=");
+				sc.useDelimiter(Constants.CHAR_IGUAL);
 				String argumentoClave = sc.next();
 				String argumentoValor = sc.next();
 				sc.close();
 
-				if (argumentoClave.equalsIgnoreCase("bbdd.driver")) {
+				if (argumentoClave.equalsIgnoreCase(Constants.PARAM_BBDD_DRIVER)) {
 					conexion.setDriver(argumentoValor);
 				}
 
-				if (argumentoClave.equalsIgnoreCase("bbdd.url")) {
+				if (argumentoClave.equalsIgnoreCase(Constants.PARAM_BBDD_URL)) {
 					conexion.setUrl(argumentoValor);
 				}
 
-				if (argumentoClave.equalsIgnoreCase("bbdd.user")) {
+				if (argumentoClave.equalsIgnoreCase(Constants.PARAM_BBDD_USER)) {
 					conexion.setUser(argumentoValor);
 				}
 
-				if (argumentoClave.equalsIgnoreCase("bbdd.pass")) {
+				if (argumentoClave.equalsIgnoreCase(Constants.PARAM_BBDD_PASS)) {
 					conexion.setPass(argumentoValor);
 				}
 
-				if (argumentoClave.equalsIgnoreCase("rutaJRXML")) {
+				if (argumentoClave.equalsIgnoreCase(Constants.PARAM_RUTA_JRXML)) {
 					rutaJRXML = argumentoValor;
 				}
 
-				if (argumentoClave.equalsIgnoreCase("rutaPDF")) {
+				if (argumentoClave.equalsIgnoreCase(Constants.PARAM_RUTA_PDF)) {
 					rutaPDF = argumentoValor;
 				}
 
-				if (argumentoClave.equalsIgnoreCase("listaParametros")) {
+				if (argumentoClave.equalsIgnoreCase(Constants.PARAM_LISTA_PARAMS)) {
 					params = procesarParametros(argumentoValor);
 				}
 				
-				if (argumentoClave.equalsIgnoreCase("listaImagenes")) {
+				if (argumentoClave.equalsIgnoreCase(Constants.PARAM_LISTA_IMAGENES)) {
 					HashMap<String, Object> imagenesMap = procesarImagenes(argumentoValor, rutaPDF);
 					params.putAll(imagenesMap);
 				}
@@ -126,7 +128,7 @@ public class MiniJRServer {
 			 */
 
 		} catch (Exception ex) {
-			File f = new File(rutaPDF + ".error");
+			File f = new File(rutaPDF + Constants.ERROR_EXT);
 			f.createNewFile();
 			ex.printStackTrace();
 		}
@@ -143,30 +145,30 @@ public class MiniJRServer {
 		HashMap<String, Object> params = new HashMap<String, Object>();
 
 		Scanner sc = new Scanner(argumentoValor);
-		sc.useDelimiter("@");
+		sc.useDelimiter(Constants.CHAR_ARROBA);
 
 		while (sc.hasNext()) {
 
 			// Segundo Scanner
 			Scanner sc2 = new Scanner(sc.next());
-			sc2.useDelimiter("#");
+			sc2.useDelimiter(Constants.CHAR_ALMHOADILLA);
 			@SuppressWarnings("rawtypes")
 			Class clase = Class.forName(sc2.next());
 			String key = sc2.next();
 			String value = sc2.next();
 			Object o = null;
-			if (clase.getName().equalsIgnoreCase("java.lang.String")) {
+			if (clase.getName().equalsIgnoreCase(String.class.getName())) {
 				o = value;
-			} else if (clase.getName().equalsIgnoreCase("java.lang.Integer")) {
+			} else if (clase.getName().equalsIgnoreCase(Integer.class.getName())) {
 				o = new Integer(value);
-			} else if (clase.getName().equalsIgnoreCase("java.lang.Short")) {
+			} else if (clase.getName().equalsIgnoreCase(Short.class.getName())) {
 				o = new Short(value);
-			} else if (clase.getName().equalsIgnoreCase("java.lang.Long")) {
+			} else if (clase.getName().equalsIgnoreCase(Long.class.getName())) {
 				o = new Long(value);
-			} else if (clase.getName().equalsIgnoreCase("java.util.Date")) {
-				SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+			} else if (clase.getName().equalsIgnoreCase(Date.class.getName())) {
+				SimpleDateFormat sdf = new SimpleDateFormat(Constants.DATE_FORMAT_DDMMYYYY);
 				o = sdf.parse(value);
-			} else if (clase.getName().equalsIgnoreCase("java.math.BigDecimal")) {
+			} else if (clase.getName().equalsIgnoreCase(BigDecimal.class.getName())) {
 				BigDecimal bd = new BigDecimal(value);
 				o = bd;
 			}
@@ -191,18 +193,18 @@ public class MiniJRServer {
 		String pathDirectory = pdf.getParent();
 		
 		Scanner sc = new Scanner(argumentoValor);
-		sc.useDelimiter("@");
+		sc.useDelimiter(Constants.CHAR_ARROBA);
 
 		while (sc.hasNext()) {
 			
 			Scanner sc2 = new Scanner(sc.next());
-			sc2.useDelimiter("#");
+			sc2.useDelimiter(Constants.CHAR_ALMHOADILLA);
 			
 			while(sc2.hasNext()) {
 				try {
 					String key = sc2.next();
 					String extension = sc2.next();
-					mapImagenes.put(key, new FileInputStream(new File(pathDirectory + File.separator + key + "." + extension)));
+					mapImagenes.put(key, new FileInputStream(new File(pathDirectory + File.separator + key + Constants.CHAR_PUNTO + extension)));
 				} catch (Exception ex) {
 					ex.printStackTrace();
 				}
