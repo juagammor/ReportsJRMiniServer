@@ -45,6 +45,10 @@ public class MiniJRServer {
 			
 			// Crear el Mapa de Parametros desde el argumento
 			HashMap<String, Object> params = new HashMap<String, Object>();
+			//
+			HashMap<String, Object> imagenesMap = null;
+			String imagenesSt = null;
+			
 			
 			for (int i = 0; i < args.length; i++) {
 				// System.out.println(args[i]);
@@ -86,9 +90,18 @@ public class MiniJRServer {
 				}
 				
 				if (argumentoClave.equalsIgnoreCase(Constants.PARAM_LISTA_IMAGENES)) {
-					HashMap<String, Object> imagenesMap = procesarImagenes(argumentoValor, rutaPDF);
-					params.putAll(imagenesMap);
+					if (!rutaPDF.equalsIgnoreCase("")) {
+						imagenesMap = procesarImagenes(argumentoValor, rutaPDF);
+						params.putAll(imagenesMap);
+					} else {
+						imagenesSt = argumentoValor;
+					}
 				}
+			}
+			
+			if (imagenesMap == null) {
+				imagenesMap = procesarImagenes(imagenesSt, rutaPDF);
+				params.putAll(imagenesMap);
 			}
 			
 			// Crear conexion
